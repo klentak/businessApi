@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EmployeeRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EmployeeRepository::class)]
@@ -24,6 +26,14 @@ class Employee
 
     #[ORM\Column(length: 13, nullable: true)]
     private ?string $phoneNumber = null;
+
+    #[ORM\ManyToMany(targetEntity: Company::class, inversedBy: 'employees')]
+    private Collection $company;
+
+    public function __construct()
+    {
+        $this->company = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -74,6 +84,30 @@ class Employee
     public function setPhoneNumber(?string $phoneNumber): self
     {
         $this->phoneNumber = $phoneNumber;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Company>
+     */
+    public function getCompany(): Collection
+    {
+        return $this->company;
+    }
+
+    public function addCompany(Company $company): self
+    {
+        if (!$this->company->contains($company)) {
+            $this->company->add($company);
+        }
+
+        return $this;
+    }
+
+    public function removeCompany(Company $company): self
+    {
+        $this->company->removeElement($company);
 
         return $this;
     }
