@@ -2,18 +2,14 @@
 
 namespace App\Repository;
 
+use App\Command\EmployeeCommand;
+use App\DTO\Employee\EmployeeDTOFactory;
 use App\Entity\Employee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use RuntimeException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-/**
- * @extends ServiceEntityRepository<Employee>
- *
- * @method Employee|null find($id, $lockMode = null, $lockVersion = null)
- * @method Employee|null findOneBy(array $criteria, array $orderBy = null)
- * @method Employee[]    findAll()
- * @method Employee[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
- */
 class EmployeeRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
@@ -39,28 +35,67 @@ class EmployeeRepository extends ServiceEntityRepository
         }
     }
 
-//    /**
-//     * @return Employee[] Returns an array of Employee objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('e.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function getAll(): array
+    {
+        return EmployeeDTOFactory::createCollectionFromArrayEntity(
+            $this->findAll()
+        );
+    }
 
-//    public function findOneBySomeField($value): ?Employee
-//    {
-//        return $this->createQueryBuilder('e')
-//            ->andWhere('e.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function getEmployeeById(int $id)
+    {
+        return EmployeeDTOFactory::createFromEntity(
+            $this->find($id)
+                ?? throw new NotFoundHttpException(sprintf('No Employee found for id: "%s"', $id))
+        );
+    }
+
+    public function create(EmployeeCommand $employeeCommand, array $companies): ?int
+    {
+        $employee = (new Employee())
+            ->setName($employeeCommand->getName())
+            ->setSurname($employeeCommand->getSurname())
+            ->setEmail($employeeCommand->getEmail())
+            ->setPhoneNumber($employeeCommand->getPhoneNumber());
+
+        foreach ($companies as $company) {
+            $employee->addCompany($company);
+        }
+
+        $this->getEntityManager()->persist($employee);
+        $this->getEntityManager()->flush();
+
+        return $employee->getId()
+            ?? throw new RuntimeException('Error occurred while inserting to database');
+    }
+
+    public function update(int $id, EmployeeCommand $employeeCommand, array $companies): void
+    {
+        /** @var Employee $employee */
+        $employee = $this->find($id) ?? throw new NotFoundHttpException(
+            sprintf('No Employee found for id: "%s"', $id)
+        );
+
+        if ($name = $employeeCommand->getName()) {
+            $employee->setName($name);
+        }
+
+        if ($surname = $employeeCommand->getSurname()) {
+            $employee->setSurname($surname);
+        }
+
+        if ($email = $employeeCommand->getEmail()) {
+            $employee->setEmail($email);
+        }
+
+        if ($phoneNumber = $employeeCommand->getPhoneNumber()) {
+            $employee->setPhoneNumber($phoneNumber);
+        }
+
+        foreach ($companies as $company) {
+            $employee->addCompany($company);
+        }
+
+        $this->getEntityManager()->flush();
+    }
 }

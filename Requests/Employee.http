@@ -1,0 +1,34 @@
+POST {url}/employee
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "test",
+  "surname": "test",
+  "email": "test@mail.com",
+  "company": [
+    1
+  ],
+  "phoneNumber": "123321123"
+}
+
+###
+
+GET {url}/employee
+Accept: application/json
+
+###
+
+GET {url}/employee/1
+Accept: application/json
+
+###
+
+PUT {url}/employee/3
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "New",
+  "surname": "New"
+}
