@@ -30,7 +30,7 @@ class EmployeeController extends AbstractController
     }
 
     #[Route('/employee', name: 'create-employee', methods: ['POST'])]
-    public function createEmployee(Request $request, ValidatorInterface $validator): Response
+    public function createEmployee(Request $request): Response
     {
         return $this->json(
             $this->employeeService->createEmployee(
@@ -52,12 +52,20 @@ class EmployeeController extends AbstractController
     #[Route('/employee/{id}', name: 'update-employee', methods: ['PUT'])]
     public function updateEmployee(int $id, Request $request): Response
     {
-        $this->employeeService->updateEmployeeBy(
+        $this->employeeService->updateEmployee(
             $id,
             EmployeeCommandFactory::createFromPayload(
                 $request->toArray()
             )
         );
+
+        return new Response(null, 204);
+    }
+
+    #[Route('/employee/{id}', name: 'update-employee', methods: ['DELETE'])]
+    public function deleteEmployee(int $id): Response
+    {
+        $this->employeeService->deleteEmployeeById($id);
 
         return new Response(null, 204);
     }

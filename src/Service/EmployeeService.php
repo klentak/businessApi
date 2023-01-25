@@ -14,9 +14,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class EmployeeService
 {
     private EmployeeRepository $employeeRepository;
-
     private CompanyRepository $companyRepository;
-
     private ValidatorInterface $validator;
 
     public function __construct(
@@ -49,7 +47,7 @@ class EmployeeService
         return $this->employeeRepository->create($employeeCommand, $companies);
     }
 
-    public function updateEmployeeBy(int $id, EmployeeCommand $employeeCommand): void
+    public function updateEmployee(int $id, EmployeeCommand $employeeCommand): void
     {
         $this->validateEmployeeCommand($employeeCommand, EmployeeCommand::CREATE_UPDATE);
         $companies = $employeeCommand->getCompany() ?
@@ -79,5 +77,10 @@ class EmployeeService
         if ($errors->count() > 0) {
             throw new BadRequestException((string)$errors);
         }
+    }
+
+    public function deleteEmployeeById(int $id)
+    {
+        $this->employeeRepository->deleteById($id);
     }
 }

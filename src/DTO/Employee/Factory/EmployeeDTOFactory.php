@@ -2,8 +2,9 @@
 
 declare(strict_types=1);
 
-namespace App\DTO\Employee;
+namespace App\DTO\Employee\Factory;
 
+use App\DTO\Employee\EmployeeDTO;
 use App\Entity\Employee;
 
 class EmployeeDTOFactory

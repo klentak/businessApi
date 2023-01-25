@@ -15,8 +15,14 @@ class EmployeeDTO implements JsonSerializable
     private readonly string $phoneNumber;
     private readonly array $company;
     
-    public function __construct(int $id, string $name, string $surname, string $email, string $phoneNumber, array $company)
-    {
+    public function __construct(
+        int $id,
+        string $name,
+        string $surname,
+        string $email,
+        string $phoneNumber,
+        array $company
+    ) {
         $this->id = $id;
         $this->name = $name;
         $this->surname = $surname;

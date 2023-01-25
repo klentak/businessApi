@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Command\EmployeeCommand;
-use App\DTO\Employee\EmployeeDTOFactory;
+use App\DTO\Employee\Factory\EmployeeDTOFactory;
 use App\Entity\Employee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -62,8 +62,7 @@ class EmployeeRepository extends ServiceEntityRepository
             $employee->addCompany($company);
         }
 
-        $this->getEntityManager()->persist($employee);
-        $this->getEntityManager()->flush();
+        $this->save($employee, true);
 
         return $employee->getId()
             ?? throw new RuntimeException('Error occurred while inserting to database');
@@ -71,10 +70,7 @@ class EmployeeRepository extends ServiceEntityRepository
 
     public function update(int $id, EmployeeCommand $employeeCommand, array $companies): void
     {
-        /** @var Employee $employee */
-        $employee = $this->find($id) ?? throw new NotFoundHttpException(
-            sprintf('No Employee found for id: "%s"', $id)
-        );
+        $employee = $this->getById($id, true);
 
         if ($name = $employeeCommand->getName()) {
             $employee->setName($name);
@@ -97,5 +93,30 @@ class EmployeeRepository extends ServiceEntityRepository
         }
 
         $this->getEntityManager()->flush();
+    }
+
+    public function deleteById(int $id): void
+    {
+        $this->remove(
+            $this->getById($id, true),
+            true
+        );
+    }
+
+    private function getById(int $id, $withThrow = false): ?Employee
+    {
+        /** @var Employee $employee */
+        $employee = $this->find($id);
+
+        if (
+            $withThrow
+            && !$employee instanceof Employee
+        ) {
+            throw new NotFoundHttpException(
+                sprintf('No Employee found for id: "%s"', $id)
+            );
+        }
+
+        return $employee;
     }
 }

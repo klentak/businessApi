@@ -32,3 +32,8 @@ Content-Type: application/json
   "name": "New",
   "surname": "New"
 }
+
+###
+
+DELETE localhost:8000/employee/2
+Accept: application/json
