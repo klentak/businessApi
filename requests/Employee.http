@@ -1,4 +1,4 @@
-POST {url}/employee
+POST {{url}}/employee
 Accept: application/json
 Content-Type: application/json
 
@@ -14,17 +14,17 @@ Content-Type: application/json
 
 ###
 
-GET {url}/employee
+GET {{url}}/employee
 Accept: application/json
 
 ###
 
-GET {url}/employee/1
+GET {{url}}/employee/1
 Accept: application/json
 
 ###
 
-PUT {url}/employee/3
+PUT {{url}}/employee/3
 Accept: application/json
 Content-Type: application/json
 
@@ -35,5 +35,5 @@ Content-Type: application/json
 
 ###
 
-DELETE localhost:8000/employee/2
+DELETE {{url}}/employee/2
 Accept: application/json

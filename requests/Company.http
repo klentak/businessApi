@@ -1,0 +1,37 @@
+POST {{url}}/company
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "Test",
+  "nip": "1233211232",
+  "address": "Testowa 21",
+  "city": "Test City Wielkie",
+  "postCode": "76-200"
+}
+
+###
+
+GET {{url}}/company
+Accept: application/json
+
+###
+
+GET {{url}}/company/2
+Accept: application/json
+
+###
+
+PUT {{url}}/company/2
+Accept: application/json
+Content-Type: application/json
+
+{
+  "name": "New",
+  "nip": "3211233212"
+}
+
+###
+
+DELETE {{url}}/company/2
+Accept: application/json

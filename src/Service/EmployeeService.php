@@ -49,7 +49,7 @@ class EmployeeService
 
     public function updateEmployee(int $id, EmployeeCommand $employeeCommand): void
     {
-        $this->validateEmployeeCommand($employeeCommand, EmployeeCommand::CREATE_UPDATE);
+        $this->validateEmployeeCommand($employeeCommand, EmployeeCommand::UPDATE_GROUP);
         $companies = $employeeCommand->getCompany() ?
             $this->getCompanies($employeeCommand->getCompany())
             : [];
@@ -79,7 +79,7 @@ class EmployeeService
         }
     }
 
-    public function deleteEmployeeById(int $id)
+    public function deleteEmployeeById(int $id): void
     {
         $this->employeeRepository->deleteById($id);
     }

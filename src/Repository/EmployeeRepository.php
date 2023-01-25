@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Command\EmployeeCommand;
+use App\DTO\Employee\EmployeeDTO;
 use App\DTO\Employee\Factory\EmployeeDTOFactory;
 use App\Entity\Employee;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -42,7 +43,7 @@ class EmployeeRepository extends ServiceEntityRepository
         );
     }
 
-    public function getEmployeeById(int $id)
+    public function getEmployeeById(int $id): EmployeeDTO
     {
         return EmployeeDTOFactory::createFromEntity(
             $this->find($id)
@@ -70,7 +71,7 @@ class EmployeeRepository extends ServiceEntityRepository
 
     public function update(int $id, EmployeeCommand $employeeCommand, array $companies): void
     {
-        $employee = $this->getById($id, true);
+        $employee = $this->getEntityById($id, true);
 
         if ($name = $employeeCommand->getName()) {
             $employee->setName($name);
@@ -98,12 +99,12 @@ class EmployeeRepository extends ServiceEntityRepository
     public function deleteById(int $id): void
     {
         $this->remove(
-            $this->getById($id, true),
+            $this->getEntityById($id, true),
             true
         );
     }
 
-    private function getById(int $id, $withThrow = false): ?Employee
+    private function getEntityById(int $id, $withThrow = false): ?Employee
     {
         /** @var Employee $employee */
         $employee = $this->find($id);

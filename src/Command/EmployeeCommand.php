@@ -10,26 +10,26 @@ class EmployeeCommand
 {
     public const CREATE_GROUP = 'create';
 
-    public const CREATE_UPDATE = 'update';
+    public const UPDATE_GROUP = 'update';
 
     #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
-    #[Assert\Length(max: 100, groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
+    #[Assert\Length(max: 100, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $name;
 
     #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
-    #[Assert\Length(max: 130, groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
+    #[Assert\Length(max: 130, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $surname;
 
     #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
     #[Assert\Email(groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
-    #[Assert\Length(max: 255, groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
+    #[Assert\Length(max: 255, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $email;
 
     // TODO: #0000 - phoneNumber validation
-    #[Assert\Length(max: 13, groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
+    #[Assert\Length(max: 13, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $phoneNumber;
 
-    #[Assert\NotBlank(groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
+    #[Assert\NotBlank(groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?array $company;
 
     public function getName(): ?string
