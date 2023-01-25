@@ -55,7 +55,7 @@ class CompanyService
         $errors = $this->validator->validate($companyCommand, null, $group);
 
         if ($errors->count() > 0) {
-            throw new BadRequestException((string)$errors);
+            throw new BadRequestException((string)$errors, 400);
         }
     }
 }

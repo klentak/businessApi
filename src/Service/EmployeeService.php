@@ -8,7 +8,7 @@ use App\Command\EmployeeCommand;
 use App\DTO\Employee\EmployeeDTO;
 use App\Repository\CompanyRepository;
 use App\Repository\EmployeeRepository;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class EmployeeService
@@ -64,7 +64,7 @@ class EmployeeService
         ]);
 
         if (count($companies) !== count($companiesId)) {
-            throw new BadRequestException('Not all companies found');
+            throw new BadRequestHttpException('Not all companies found');
         }
 
         return $companies;
@@ -75,7 +75,7 @@ class EmployeeService
         $errors = $this->validator->validate($employeeCommand, null, $group);
 
         if ($errors->count() > 0) {
-            throw new BadRequestException((string)$errors);
+            throw new BadRequestHttpException((string)$errors);
         }
     }
 
