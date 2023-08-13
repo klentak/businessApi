@@ -61,7 +61,6 @@ class CompanyRepository extends ServiceEntityRepository
         );
     }
 
-
     public function create(CompanyCommand $employeeCommand): int
     {
         $company = (new Company())
