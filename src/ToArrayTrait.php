@@ -16,5 +16,4 @@ trait ToArrayTrait
 
         return $values;
     }
-
 }

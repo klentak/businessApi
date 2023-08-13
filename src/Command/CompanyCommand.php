@@ -15,6 +15,7 @@ class CompanyCommand
     #[Assert\Length(max: 255, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private  ?string $name;
 
+    // TODO: #0000 - nip validation
     #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
     #[Assert\Length(min: 10, max: 10, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private  ?string $nip;
