@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Command\Factory\EmployeeCommandFactory;
+use App\Request\CreateEmployeeRequest;
 use App\Service\EmployeeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -29,7 +30,7 @@ class EmployeeController extends AbstractController
     }
 
     #[Route('/employee', name: 'create-employee', methods: ['POST'])]
-    public function createEmployee(Request $request): Response
+    public function createEmployee(CreateEmployeeRequest $request): Response
     {
         return $this->json(
             $this->employeeService->createEmployee(

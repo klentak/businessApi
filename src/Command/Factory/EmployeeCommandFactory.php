@@ -14,7 +14,7 @@ class EmployeeCommandFactory
             ->setName($payload['name'] ?? null)
             ->setSurname($payload['surname'] ?? null)
             ->setEmail($payload['email'] ?? null)
-            ->setCompany($payload['company'] ?? null)
+            ->setCompanies($payload['company'] ?? null)
             ->setPhoneNumber($payload['phoneNumber'] ?? null);
     }
 }
