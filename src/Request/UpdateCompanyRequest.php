@@ -6,7 +6,6 @@ namespace App\Request;
 
 use Symfony\Component\Validator\Constraints as Assert;
 
-
 class UpdateCompanyRequest extends BaseRequest
 {
     #[Assert\Type('string')]

@@ -25,7 +25,10 @@ abstract class BaseRequest implements Arrayable
 
     public function validate(): void
     {
-        $messages = ['message' => 'Validation failed', 'errors' => []];
+        $messages = [
+            'message' => 'Validation failed',
+            'errors' => []
+        ];
 
         /** @var ConstraintViolation $message */
         foreach ( $this->validator->validate($this) as $message) {
