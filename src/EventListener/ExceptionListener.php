@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\EventListener;
 
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Throwable;
 
 class ExceptionListener
 {
@@ -14,11 +16,18 @@ class ExceptionListener
         $exception = $event->getThrowable();
         $response = new JsonResponse([
             'error' => [
-                'code' => $exception->getStatusCode(),
+                'code' => $this->getCode($exception),
                 'message' => $exception->getMessage(),
             ]
-        ], $exception->getStatusCode() ?: 500);
+        ], $this->getCode($exception));
 
         $event->setResponse($response);
+    }
+
+    private function getCode(Throwable $exception): int
+    {
+        return in_array($code = $exception->getCode(), array_keys(Response::$statusTexts))
+            ? $code
+            : Response::HTTP_INTERNAL_SERVER_ERROR;
     }
 }

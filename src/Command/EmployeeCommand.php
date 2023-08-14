@@ -4,33 +4,22 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Arrayable;
+use App\ToArrayTrait;
 
-class EmployeeCommand
+class EmployeeCommand implements Arrayable
 {
-    public const CREATE_GROUP = 'create';
+    use ToArrayTrait;
 
-    public const UPDATE_GROUP = 'update';
-
-    #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
-    #[Assert\Length(max: 100, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $name;
 
-    #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
-    #[Assert\Length(max: 130, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $surname;
 
-    #[Assert\NotBlank(groups: [self::CREATE_GROUP])]
-    #[Assert\Email(groups: [self::CREATE_GROUP, self::CREATE_GROUP])]
-    #[Assert\Length(max: 255, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $email;
 
-    // TODO: #0000 - phoneNumber validation
-    #[Assert\Length(max: 13, groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
     private ?string $phoneNumber;
 
-    #[Assert\NotBlank(groups: [self::CREATE_GROUP, self::UPDATE_GROUP])]
-    private ?array $company;
+    private ?array $companies;
 
     public function getName(): ?string
     {
@@ -80,14 +69,15 @@ class EmployeeCommand
         return $this;
     }
 
-    public function getCompany(): ?array
+    public function getCompanies(): ?array
     {
-        return $this->company;
+        return $this->companies;
     }
 
-    public function setCompany(?array $company): EmployeeCommand
+    public function setCompanies(?array $companies): EmployeeCommand
     {
-        $this->company = $company;
+        $this->companies = $companies;
+
         return $this;
     }
 }

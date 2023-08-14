@@ -6,19 +6,16 @@ namespace App\Service;
 
 use App\Command\CompanyCommand;
 use App\DTO\Company\CompanyDTO;
+use App\DTO\Company\Factory\CompanyDTOFactory;
+use App\Entity\Company;
 use App\Repository\CompanyRepository;
-use Symfony\Component\HttpFoundation\Exception\BadRequestException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class CompanyService
 {
-    private CompanyRepository $companyRepository;
-    private ValidatorInterface $validator;
-
-    public function __construct(CompanyRepository $companyRepository, ValidatorInterface $validator)
-    {
-        $this->companyRepository = $companyRepository;
-        $this->validator = $validator;
+    public function __construct(
+        private readonly CompanyRepository $companyRepository
+    ) {
     }
 
     public function getAllCompanies(): array
@@ -31,18 +28,26 @@ class CompanyService
         return $this->companyRepository->getCompanyById($id);
     }
 
-    public function createCompany(CompanyCommand $employeeCommand): int
+    public function getCompanyByNip(string $nip): ?CompanyDTO
     {
-        $this->validateCompanyCommand($employeeCommand, CompanyCommand::CREATE_GROUP);
+        /** @var Company $companyEntity */
+        $companyEntity = $this->companyRepository->findBy([
+            'nip' => $nip
+        ]);
 
-        return $this->companyRepository->create($employeeCommand);
+        return $companyEntity
+            ? CompanyDTOFactory::createFromEntity($companyEntity)
+            : null;
     }
 
-    public function updateCompany(int $id, CompanyCommand $employeeCommand): void
+    public function createCompany(CompanyCommand $companyCommand): int
     {
-        $this->validateCompanyCommand($employeeCommand, CompanyCommand::UPDATE_GROUP);
+        return $this->companyRepository->create($companyCommand);
+    }
 
-        $this->companyRepository->update($id, $employeeCommand);
+    public function updateCompany(int $id, CompanyCommand $companyCommand): void
+    {
+        $this->companyRepository->update($id, $companyCommand);
     }
 
     public function deleteCompanyById(int $id): void
@@ -50,12 +55,19 @@ class CompanyService
         $this->companyRepository->deleteById($id);
     }
 
-    private function validateCompanyCommand(CompanyCommand $companyCommand, string $group): void
+    /**
+     * @return Company[]
+     */
+    public function getCompanies(array $companiesId): array
     {
-        $errors = $this->validator->validate($companyCommand, null, $group);
+        $companies = $this->companyRepository->findBy([
+            'id' => $companiesId
+        ]);
 
-        if ($errors->count() > 0) {
-            throw new BadRequestException((string)$errors, 400);
+        if (count($companies) !== count($companiesId)) {
+            throw new BadRequestHttpException('Not all companies were found!');
         }
+
+        return $companies;
     }
 }

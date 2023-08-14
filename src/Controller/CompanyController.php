@@ -5,9 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use App\Command\Factory\CompanyCommandFactory;
+use App\Request\CreateCompanyRequest;
 use App\Service\CompanyService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -29,7 +29,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company', name: 'create-company', methods: ['POST'])]
-    public function createCompany(Request $request): Response
+    public function createCompany(CreateCompanyRequest $request): Response
     {
         return $this->json(
             $this->companyService->createCompany(
@@ -49,7 +49,7 @@ class CompanyController extends AbstractController
     }
 
     #[Route('/company/{id}', name: 'update-company', methods: ['PUT'])]
-    public function updateCompany(int $id, Request $request): Response
+    public function updateCompany(int $id, CreateCompanyRequest $request): Response
     {
         $this->companyService->updateCompany(
             $id,

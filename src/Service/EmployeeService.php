@@ -6,26 +6,14 @@ namespace App\Service;
 
 use App\Command\EmployeeCommand;
 use App\DTO\Employee\EmployeeDTO;
-use App\Repository\CompanyRepository;
 use App\Repository\EmployeeRepository;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class EmployeeService
 {
-    private EmployeeRepository $employeeRepository;
-    private CompanyRepository $companyRepository;
-    private ValidatorInterface $validator;
-
     public function __construct(
-        EmployeeRepository $employeeRepository,
-        CompanyRepository  $companyRepository,
-        ValidatorInterface $validator
-    )
-    {
-        $this->employeeRepository = $employeeRepository;
-        $this->companyRepository = $companyRepository;
-        $this->validator = $validator;
+        private readonly EmployeeRepository $employeeRepository,
+        private readonly CompanyService $companyService,
+    ) {
     }
 
     public function getAllEmployees(): array
@@ -40,43 +28,20 @@ class EmployeeService
 
     public function createEmployee(EmployeeCommand $employeeCommand): int
     {
-        $this->validateEmployeeCommand($employeeCommand, EmployeeCommand::CREATE_GROUP);
-
-        $companies = $this->getCompanies($employeeCommand->getCompany());
+        $companies = $employeeCommand->getCompanies()
+            ? $this->companyService->getCompanies($employeeCommand->getCompanies())
+            : [];
 
         return $this->employeeRepository->create($employeeCommand, $companies);
     }
 
     public function updateEmployee(int $id, EmployeeCommand $employeeCommand): void
     {
-        $this->validateEmployeeCommand($employeeCommand, EmployeeCommand::UPDATE_GROUP);
-        $companies = $employeeCommand->getCompany() ?
-            $this->getCompanies($employeeCommand->getCompany())
+        $companies = $employeeCommand->getCompanies()
+            ? $this->companyService->getCompanies($employeeCommand->getCompanies())
             : [];
 
         $this->employeeRepository->update($id, $employeeCommand, $companies);
-    }
-
-    private function getCompanies(array $companiesId): array
-    {
-        $companies = $this->companyRepository->findBy([
-            'id' => $companiesId
-        ]);
-
-        if (count($companies) !== count($companiesId)) {
-            throw new BadRequestHttpException('Not all companies found');
-        }
-
-        return $companies;
-    }
-
-    private function validateEmployeeCommand(EmployeeCommand $employeeCommand, string $group): void
-    {
-        $errors = $this->validator->validate($employeeCommand, null, $group);
-
-        if ($errors->count() > 0) {
-            throw new BadRequestHttpException((string)$errors);
-        }
     }
 
     public function deleteEmployeeById(int $id): void
