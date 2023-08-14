@@ -10,8 +10,8 @@ trait ToArrayTrait
     {
         $values = [];
 
-        foreach ($this as $name => $var) {
-            $values[$name] = $var instanceof Arrayable ? $var->toArray() : $var;
+        foreach ($this as $name => $value) {
+            $values[$name] = $value instanceof Arrayable ? $value->toArray() : $value;
         }
 
         return $values;
