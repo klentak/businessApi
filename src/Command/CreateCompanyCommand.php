@@ -44,6 +44,7 @@ class CreateCompanyCommand
     public function setAddress(string $address): CreateCompanyCommand
     {
         $this->address = $address;
+
         return $this;
     }
 

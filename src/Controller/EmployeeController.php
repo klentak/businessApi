@@ -60,7 +60,9 @@ class EmployeeController extends AbstractController
             )->setId($id)
         );
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 
     #[Route('/employee/{id}', name: 'delete-employee', methods: ['DELETE'])]
@@ -68,6 +70,8 @@ class EmployeeController extends AbstractController
     {
         $this->employeeService->deleteEmployeeById($id);
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 }

@@ -59,7 +59,9 @@ class CompanyController extends AbstractController
             )->setId($id)
         );
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 
     #[Route('/company/{id}', name: 'delete-company', methods: ['DELETE'])]
@@ -67,6 +69,8 @@ class CompanyController extends AbstractController
     {
         $this->companyService->deleteCompanyById($id);
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 }

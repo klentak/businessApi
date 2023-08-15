@@ -27,7 +27,7 @@ Accept: application/json
 Content-Type: application/json
 
 {
-  "name": "Neww",
+  "name": "New",
   "nip": "1233211230"
 }
 

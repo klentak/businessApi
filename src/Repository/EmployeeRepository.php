@@ -49,7 +49,9 @@ class EmployeeRepository extends ServiceEntityRepository
         $result = $this->find($id);
 
         if ($withThrow && !$result) {
-            throw new NotFoundHttpException(sprintf('No Employee found for id: "%s"', $id));
+            throw new NotFoundHttpException(
+                sprintf('No Employee found for id: "%s"', $id)
+            );
         }
 
         return $result;

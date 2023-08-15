@@ -26,6 +26,7 @@ class UpdateCompanyCommand implements Arrayable
     public function setId(int $id): UpdateCompanyCommand
     {
         $this->id = $id;
+
         return $this;
     }
 
