@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
-use App\Command\CompanyCommand;
-use App\DTO\Company\CompanyDTO;
+use App\Command\CreateCompanyCommand;
+use App\Command\UpdateCompanyCommand;
 use App\DTO\Company\Factory\CompanyDTOFactory;
 use App\Entity\Company;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -45,23 +45,15 @@ class CompanyRepository extends ServiceEntityRepository
         );
     }
 
-    public function getCompanyById(int $id): CompanyDTO
-    {
-        return CompanyDTOFactory::createFromEntity(
-            $this->find($id)
-            ?? throw new NotFoundHttpException(sprintf('No Employee found for id: "%s"', $id))
-        );
-    }
-
     public function deleteById(int $id): void
     {
         $this->remove(
-            $this->getEntityById($id, true),
+            $this->getById($id, true),
             true
         );
     }
 
-    public function create(CompanyCommand $employeeCommand): int
+    public function create(CreateCompanyCommand $employeeCommand): int
     {
         $company = (new Company())
             ->setName($employeeCommand->getName())
@@ -76,9 +68,9 @@ class CompanyRepository extends ServiceEntityRepository
             ?? throw new RuntimeException('Error occurred while inserting to database');
     }
 
-    public function update(int $id, CompanyCommand $companyCommand)
+    public function update(UpdateCompanyCommand $companyCommand)
     {
-        $company = $this->getEntityById($id, true);
+        $company = $this->getById($companyCommand->getId(), true);
 
         if ($name = $companyCommand->getName()) {
             $company->setName($name);
@@ -103,7 +95,7 @@ class CompanyRepository extends ServiceEntityRepository
         $this->getEntityManager()->flush();
     }
 
-    private function getEntityById(int $id, $withThrow = false): ?Company
+    public function getById(int $id, $withThrow = false): ?Company
     {
         /** @var Company $company */
         $company = $this->find($id);
@@ -118,5 +110,18 @@ class CompanyRepository extends ServiceEntityRepository
         }
 
         return $company;
+    }
+
+    public function checkIfCompanyWithGivenNipExistAndNotBelongsToCompany(int $id, string $nip): bool
+    {
+        return !!$this->createQueryBuilder('c')
+            ->where('c.nip = :nip')
+            ->andWhere('c.id != :id')
+            ->setParameters([
+                'id' => $id,
+                'nip' => $nip,
+            ])
+            ->getQuery()
+            ->getResult();
     }
 }

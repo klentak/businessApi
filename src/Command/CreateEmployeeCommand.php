@@ -7,50 +7,46 @@ namespace App\Command;
 use App\Arrayable;
 use App\ToArrayTrait;
 
-class EmployeeCommand implements Arrayable
+class CreateEmployeeCommand implements Arrayable
 {
     use ToArrayTrait;
 
-    private ?string $name;
+    private string $name;
+    private string $surname;
+    private string $email;
+    private string $phoneNumber;
+    private array $companies;
 
-    private ?string $surname;
-
-    private ?string $email;
-
-    private ?string $phoneNumber;
-
-    private ?array $companies;
-
-    public function getName(): ?string
+    public function getName(): string
     {
         return $this->name;
     }
 
-    public function setName(?string $name): EmployeeCommand
+    public function setName(string $name): CreateEmployeeCommand
     {
         $this->name = $name;
 
         return $this;
     }
 
-    public function getSurname(): ?string
+    public function getSurname(): string
     {
         return $this->surname;
     }
 
-    public function setSurname(?string $surname): EmployeeCommand
+    public function setSurname(string $surname): CreateEmployeeCommand
     {
         $this->surname = $surname;
 
         return $this;
     }
 
-    public function getEmail(): ?string
+    public function getEmail(): string
     {
         return $this->email;
     }
 
-    public function setEmail(?string $email): EmployeeCommand
+    public function setEmail(string $email): CreateEmployeeCommand
     {
         $this->email = $email;
 
@@ -62,7 +58,7 @@ class EmployeeCommand implements Arrayable
         return $this->phoneNumber;
     }
 
-    public function setPhoneNumber(?string $phoneNumber): EmployeeCommand
+    public function setPhoneNumber(?string $phoneNumber): CreateEmployeeCommand
     {
         $this->phoneNumber = $phoneNumber;
 
@@ -74,7 +70,7 @@ class EmployeeCommand implements Arrayable
         return $this->companies;
     }
 
-    public function setCompanies(?array $companies): EmployeeCommand
+    public function setCompanies(?array $companies): CreateEmployeeCommand
     {
         $this->companies = $companies;
 
