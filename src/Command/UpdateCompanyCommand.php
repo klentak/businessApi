@@ -4,24 +4,38 @@ declare(strict_types=1);
 
 namespace App\Command;
 
-class CompanyCommand
+use App\Arrayable;
+use App\ToArrayTrait;
+
+class UpdateCompanyCommand implements Arrayable
 {
+    use ToArrayTrait;
+
+    private  int $id;
     private  ?string $name;
-
     private  ?string $nip;
-
     private  ?string $address;
-
     private  ?string $city;
-
     private  ?string $postCode;
+
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    public function setId(int $id): UpdateCompanyCommand
+    {
+        $this->id = $id;
+
+        return $this;
+    }
 
     public function getName(): ?string
     {
         return $this->name;
     }
 
-    public function setName(?string $name): CompanyCommand
+    public function setName(?string $name): UpdateCompanyCommand
     {
         $this->name = $name;
 
@@ -33,7 +47,7 @@ class CompanyCommand
         return $this->nip;
     }
 
-    public function setNip(?string $nip): CompanyCommand
+    public function setNip(?string $nip): UpdateCompanyCommand
     {
         $this->nip = $nip;
 
@@ -45,7 +59,7 @@ class CompanyCommand
         return $this->address;
     }
 
-    public function setAddress(?string $address): CompanyCommand
+    public function setAddress(?string $address): UpdateCompanyCommand
     {
         $this->address = $address;
 
@@ -57,7 +71,7 @@ class CompanyCommand
         return $this->city;
     }
 
-    public function setCity(?string $city): CompanyCommand
+    public function setCity(?string $city): UpdateCompanyCommand
     {
         $this->city = $city;
 
@@ -69,7 +83,7 @@ class CompanyCommand
         return $this->postCode;
     }
 
-    public function setPostCode(?string $postCode): CompanyCommand
+    public function setPostCode(?string $postCode): UpdateCompanyCommand
     {
         $this->postCode = $postCode;
 

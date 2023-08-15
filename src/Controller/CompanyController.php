@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Command\Factory\CompanyCommandFactory;
+use App\Command\Factory\CreateCompanyCommandFactory;
+use App\Command\Factory\UpdateCompanyCommandFactory;
 use App\Request\CreateCompanyRequest;
+use App\Request\UpdateCompanyRequest;
 use App\Service\CompanyService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,7 +35,7 @@ class CompanyController extends AbstractController
     {
         return $this->json(
             $this->companyService->createCompany(
-                CompanyCommandFactory::createFromPayload(
+                CreateCompanyCommandFactory::createFromPayload(
                     $request->toArray()
                 )
             )
@@ -44,21 +46,22 @@ class CompanyController extends AbstractController
     public function getEmployee(int $id): Response
     {
         return $this->json(
-            $this->companyService->getCompanyById($id)
+            $this->companyService->getCompanyById($id, true)
         );
     }
 
     #[Route('/company/{id}', name: 'update-company', methods: ['PUT'])]
-    public function updateCompany(int $id, CreateCompanyRequest $request): Response
+    public function updateCompany(int $id, UpdateCompanyRequest $request): Response
     {
         $this->companyService->updateCompany(
-            $id,
-            CompanyCommandFactory::createFromPayload(
+            UpdateCompanyCommandFactory::createFromPayload(
                 $request->toArray()
-            )
+            )->setId($id)
         );
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 
     #[Route('/company/{id}', name: 'delete-company', methods: ['DELETE'])]
@@ -66,6 +69,8 @@ class CompanyController extends AbstractController
     {
         $this->companyService->deleteCompanyById($id);
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 }

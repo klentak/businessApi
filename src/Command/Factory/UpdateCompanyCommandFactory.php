@@ -2,13 +2,13 @@
 
 namespace App\Command\Factory;
 
-use App\Command\CompanyCommand;
+use App\Command\UpdateCompanyCommand;
 
-class CompanyCommandFactory
+class UpdateCompanyCommandFactory
 {
-    public static function createFromPayload(array $payload): CompanyCommand
+    public static function createFromPayload(array $payload): UpdateCompanyCommand
     {
-        return (new CompanyCommand())
+        return (new UpdateCompanyCommand())
             ->setName($payload['name'] ?? null)
             ->setNip($payload['nip'] ?? null)
             ->setAddress($payload['address'] ?? null)

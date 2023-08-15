@@ -2,7 +2,8 @@
 
 namespace App\Repository;
 
-use App\Command\EmployeeCommand;
+use App\Command\CreateEmployeeCommand;
+use App\Command\UpdateEmployeeCommand;
 use App\DTO\Employee\EmployeeDTO;
 use App\DTO\Employee\Factory\EmployeeDTOFactory;
 use App\Entity\Employee;
@@ -43,15 +44,20 @@ class EmployeeRepository extends ServiceEntityRepository
         );
     }
 
-    public function getEmployeeById(int $id): EmployeeDTO
+    public function getEmployeeById(int $id, bool $withThrow = false): Employee
     {
-        return EmployeeDTOFactory::createFromEntity(
-            $this->find($id)
-                ?? throw new NotFoundHttpException(sprintf('No Employee found for id: "%s"', $id))
-        );
+        $result = $this->find($id);
+
+        if ($withThrow && !$result) {
+            throw new NotFoundHttpException(
+                sprintf('No Employee found for id: "%s"', $id)
+            );
+        }
+
+        return $result;
     }
 
-    public function create(EmployeeCommand $employeeCommand, array $companies): ?int
+    public function create(CreateEmployeeCommand $employeeCommand, array $companies): ?int
     {
         $employee = (new Employee())
             ->setName($employeeCommand->getName())
@@ -69,9 +75,9 @@ class EmployeeRepository extends ServiceEntityRepository
             ?? throw new RuntimeException('Error occurred while inserting to database');
     }
 
-    public function update(int $id, EmployeeCommand $employeeCommand, array $companies): void
+    public function update(UpdateEmployeeCommand $employeeCommand, array $companies): void
     {
-        $employee = $this->getEntityById($id, true);
+        $employee = $this->getEntityById($employeeCommand->getId(), true);
 
         if ($name = $employeeCommand->getName()) {
             $employee->setName($name);

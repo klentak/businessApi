@@ -11,23 +11,23 @@ class CreateEmployeeRequest extends BaseRequest
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[Assert\Length(max: 100)]
-    private string $name;
+    protected string $name;
 
     #[Assert\NotBlank]
     #[Assert\Type('string')]
     #[Assert\Length(max: 130)]
-    private string $surname;
+    protected string $surname;
 
     #[Assert\NotBlank]
     #[Assert\Email]
     #[Assert\Length(max: 255)]
-    private string $email;
+    protected string $email;
 
     // TODO: #0000 - phoneNumber validation
     #[Assert\Type('string')]
     #[Assert\Length(max: 13)]
-    private string $phoneNumber;
+    protected string $phoneNumber;
 
     #[Assert\NotBlank]
-    private array $company;
+    protected array $company;
 }

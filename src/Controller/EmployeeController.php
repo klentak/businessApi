@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-use App\Command\Factory\EmployeeCommandFactory;
+use App\Command\Factory\CreateEmployeeCommandFactory;
+use App\Command\Factory\UpdateEmployeeCommandFactory;
+use App\Command\UpdateEmployeeCommand;
 use App\Request\CreateEmployeeRequest;
 use App\Service\EmployeeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -34,7 +36,7 @@ class EmployeeController extends AbstractController
     {
         return $this->json(
             $this->employeeService->createEmployee(
-                EmployeeCommandFactory::createFromPayload(
+                CreateEmployeeCommandFactory::createFromPayload(
                     $request->toArray()
                 )
             )
@@ -45,28 +47,31 @@ class EmployeeController extends AbstractController
     public function getEmployee(int $id): Response
     {
         return $this->json(
-            $this->employeeService->getEmployeeById($id)
+            $this->employeeService->getEmployeeById($id, true)
         );
     }
 
     #[Route('/employee/{id}', name: 'update-employee', methods: ['PUT'])]
-    public function updateEmployee(int $id, Request $request): Response
+    public function updateEmployee(int $id, UpdateEmployeeCommand $request): Response
     {
         $this->employeeService->updateEmployee(
-            $id,
-            EmployeeCommandFactory::createFromPayload(
+            UpdateEmployeeCommandFactory::createFromPayload(
                 $request->toArray()
-            )
+            )->setId($id)
         );
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 
-    #[Route('/employee/{id}', name: 'update-employee', methods: ['DELETE'])]
+    #[Route('/employee/{id}', name: 'delete-employee', methods: ['DELETE'])]
     public function deleteEmployee(int $id): Response
     {
         $this->employeeService->deleteEmployeeById($id);
 
-        return new Response(null, 204);
+       return new Response(
+           status: Response::HTTP_NO_CONTENT
+       );
     }
 }
